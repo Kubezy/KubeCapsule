@@ -4,22 +4,32 @@
 
 This project is a time capsule created to celebrate the 10th anniversary of Kubernetes and immortalize this important milestone. We aim to create a memorial for those who have made significant contributions to the development and impact of Kubernetes, including users and community members.
 
-## Phase-01
+- **From 10 to 11:** Messages are valid for 1 year. It will be delivered to you after 1 year and shared on the web if you choose to share it publicly.
+- **From 10 to 20:** Messages are valid for 10 year. It will be delivered to you after 10 year and shared on the web if you choose to share it publicly.
+- **From 10 to 100:** Messages are valid for 100 year. It will be encrypted with an encryption algorithm that can be opened after 100 years and will be shared publicly after 100 years. New messages will be added for the 100th anniversary every 10 years.
+
+> - **Can it really be stored for 100 years? And will it be able to open successfully when the time is right?** We hope this will be completed successfully. Probably no one contributing to this project now will live until then. But this is a community project and we think the community will protect this data.
+
+------------
+
+
+### Phase-01
 In the first phase, we aim to collect data via a website and form and store it securely via API. We will complete the first phase by May 1, 2024. We will then collect messages until the end of June 2024.
-## Phase-02
+### Phase-02
 After all the messages are collected (We plan to store the messages in an Object Storage), a classification process will begin and we will set up the capsule at the right time with a second API and a few JOBs that we will create. (Deadline August 1 2024)
-## Phase-03
+### Phase-03
 With the test data, we will determine how the messages will appear on the web and in the e-mails to be sent to users and make some developments. (Deadline September 1 2024)
-## Phase-04
+### Phase-04
 Wait for the Right Time!
 
 
-## How Can I Participate?
+### How Can I Participate?
 
-## How Can I Contribute?
+### How Can I Contribute?
 
 Thank you for your contribution! 
 
-## Contributors
-## Supporters
-## Sponsors
+#### Contributors
+#### Supporters
+#### Sponsors
+
