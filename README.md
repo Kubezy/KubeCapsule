@@ -25,7 +25,7 @@ Wait for the Right Time!
 
 ------------
 
-##FAQ
+## FAQ
 ##### How Can I Participate?
 
 ##### How Can I Contribute?
