@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kubecapsule-web
+  namespace: kubecapsule-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kubecapsule-web
+  template:
+    metadata:
+      labels:
+        app: kubecapsule-web
+    spec:
+      containers:
+        - name: kubecapsule-web
+          image: kubezy/kubecapsule:web
+          ports:
+            - containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kubecapsule-web-service
+  namespace: kubecapsule-web
+spec:
+  selector:
+    app: kubecapsule-web
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+  type: ClusterIP

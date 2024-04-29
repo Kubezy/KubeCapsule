@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('/fonts/poppins/poppins.woff2') format('woff2');
+}
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Makes the selected text white with blue background */
+::-moz-selection {
+  background: #326ce5;
+  color: #fff;
+}
+::-webkit-selection {
+  background: #326ce5;
+  color: #fff;
+}
+::selection {
+  background: #326ce5;
+  color: #fff;
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.main-card-footer{
+  background-color: #326ce5;
+}
+
+.main-card-footer:hover{
+  background-color: #4578e6;
+}
+
+.main-card-horizontal{
+  background-color: #fff;
+}
+
+.overflow-disable{
+  overflow: hidden;
+}
+
