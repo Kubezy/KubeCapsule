@@ -6,7 +6,7 @@ import Sponsors from "./components/pages/main/sponsors";
 export default function Home() {
   return (
     <>
-      <div className="mt-6 mx-20 max-w-screen-xl mx-auto">
+      <div className="mt-6 max-w-screen-xl mx-auto">
         <Hero/>
         <Cards />
         <Sponsors />
