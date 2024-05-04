@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Alert from "../components/pages/message/alert";
 import Button from "../components/pages/message/button";
 import Dropdown from "../components/pages/message/dropdown";
 import FileInput from "../components/pages/message/fileInput";
@@ -23,10 +24,11 @@ export default function Messages() {
 
     return (
         <>
+        <Alert/>
             <div className="mt-6 max-w-screen-xl mx-auto">
                 <div className={`h-2 border-t-4 border-kubernetes`} style={{ width: `${steps.currentStep * 25}%` }}></div>
                 <div className="w-full">
-                    <ul className="flex w-full">
+                    <ul className="flex w-full text-center">
                         {steps.stepsItems.map((item) => {
                             return (
                                 <li className="relative" style={{ left: `${steps.stepsItems.indexOf(item) * 25}%` }}>
