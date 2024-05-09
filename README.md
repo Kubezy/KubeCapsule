@@ -5,12 +5,8 @@
 This project is a time capsule created to celebrate the 10th anniversary of Kubernetes and immortalize this important milestone. We aim to create a memorial for those who have made significant contributions to the development and impact of Kubernetes, including users and community members.
 
 - **From 10 to 11:** Messages are valid for 1 year. It will be delivered to you after 1 year and shared on the web if you choose to share it publicly.
-- **From 10 to 20:** Messages are valid for 10 year. It will be delivered to you after 10 year and shared on the web if you choose to share it publicly.
-- **From 10 to 100:** Messages are valid for 100 year. It will be encrypted with an encryption algorithm that can be opened after 100 years and will be shared publicly after 100 years. New messages will be added for the 100th anniversary every 10 years.
-
-> - **Can it really be stored for 100 years? And will it be able to open successfully when the time is right?**
-We hope this will be completed successfully. Probably no one contributing to this project now will live until then. But this is a community project and we think the community will protect this data.
-
+- **From 10 to 15:** Messages are valid for 5 year. It will be delivered to you after 5 year and shared on the web if you choose to share it publicly.
+- **From 10 to 20:** Messages are valid for 10 year. It will be encrypted with an encryption algorithm that can be opened after 10 years and will be shared publicly after 10 years. New messages will be added for the 100th anniversary every 10 years.
 
 ------------
 
