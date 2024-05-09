@@ -9,9 +9,10 @@ This project is a time capsule created to celebrate the 10th anniversary of Kube
 - **From 10 to 20:** Messages are valid for 10 year. It will be encrypted with an encryption algorithm that can be opened after 10 years and will be shared publicly after 10 years. New messages will be added for the 100th anniversary every 10 years.
 
 ------------
-
+~~
 ### Phase-01
 In the first phase, we aim to collect data via a website and form and store it securely via API. We will complete the first phase by May 1, 2024. We will then collect messages until the end of June 2024.
+~~
 ### Phase-02
 After all the messages are collected (We plan to store the messages in an Object Storage), a classification process will begin and we will set up the capsule at the right time with a second API and a few JOBs that we will create. (Deadline August 1 2024)
 ### Phase-03
