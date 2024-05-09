@@ -30,6 +30,7 @@ export default () => {
         }).then((response) => {
           return response.json()
         }).then((data) => {
+          console.log(data)
           if (data.access_token) {
             localStorage.setItem("accessToken", data.access_token)
           }
@@ -99,7 +100,7 @@ export default () => {
           </button> 
           </>
           :
-          <a href={`http://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&scope=public_repo`} className="flex bg-kubernetes rounded-sm p-2">
+          <a href={`http://github.com/login/oauth/authorize?client_id=${CLIENT_ID}`} className="flex bg-kubernetes rounded-sm p-2">
             <img className='mr-1' height="24" width="24" src="https://cdn.simpleicons.org/github/white" />
             Login With GitHub
           </a>

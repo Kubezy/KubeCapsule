@@ -42,6 +42,26 @@ export default function Messages() {
         })
     }
 
+    async function sendMessageToDB(message: any) { //id, email, duration, message, share_public
+      try {
+          const response = await fetch(`http://localhost:4000/addmessage?email=${message.email}&duration=${message.duration}&message=${message.message}&share_public=${message.share_public}`, {
+              method: "GET",
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+          });
+  
+          if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          
+          const data = await response.json(); // Assuming the server sends back JSON data.
+          console.log(data); // Log or handle the response data as needed.
+      } catch (error) {
+          console.error('Error sending message:', error);
+      }
+    }
+
     useEffect(() => {
         // Get the code returned from GitHub OAuth
         const query = window.location.search;
@@ -77,10 +97,6 @@ export default function Messages() {
         }
       }, [])
 
-    if (!render) {
-        window.location.href = "http://localhost:3000"
-    }
-
     return (
         <>
         <Alert/>
@@ -102,14 +118,18 @@ export default function Messages() {
                 {steps.currentStep === 3 && (
                     <>
                     <Input placeholder="Full Name" value={name} onChange={(newName) => setName(newName)}/>
-                    <Dropdown title="Duration" options={["1 Year", "10 Years", "100 Years"]} onChange={(newDuration) => setDuration(newDuration)}/>
+                    <Dropdown title="Duration" options={["1 Year", "5 Years", "10 Years"]} onChange={(newDuration) => setDuration(newDuration)}/>
                     <TextArea placeholder="Message" onChange={(newMessage) => setMessage(newMessage)}/>
-                    <FileInput placeholder="Message" onChange={(newImage) => setImage(newImage)}/>
                     <Radio radios={["No", "Yes"]} onChange={(newPrivacy) => setPrivacy(newPrivacy)} />
                     </>
                 )}
                 <Button title={`${steps.currentStep === 4 ? "Submit" : "Next"}`} onClick={() => {
-                    if (steps.currentStep !== 4) setStep({stepsItems: steps.stepsItems, currentStep: steps.currentStep + 1})
+                    if (steps.currentStep !== 4){
+                      setStep({stepsItems: steps.stepsItems, currentStep: steps.currentStep + 1})
+                    }
+                    else {
+                      sendMessageToDB({email: email, duration: 1, message: message, share_public: privacy})
+                    }
                 }}/>
             </div>
         </>

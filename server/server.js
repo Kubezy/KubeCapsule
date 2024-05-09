@@ -2,6 +2,7 @@ var express = require('express')
 var cors = require('cors')
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args))
 var bodyParser = require('body-parser')
+require('dotenv').config()
 
 const CLIENT_ID=process.env.CLIENT_ID
 const CLIENT_SECRET=process.env.CLIENT_SECRET
@@ -14,6 +15,22 @@ app.use(cors({
 }));
 
 app.use(bodyParser.json())
+
+const pool = require('./database')
+
+app.get('/addmessage', async function (req, res) {
+    const { email, duration, message, share_public } = req.query;
+    
+    // Insert data into the PostgreSQL database
+    const query = 'INSERT INTO messages(email, duration, message, share_public) VALUES($1, $2, $3, $4)';
+    const values = [email, duration, message, share_public];
+
+    try {
+        await pool.query(query, values);
+    } catch (err) {
+        console.error(err.stack);
+    }
+});
 
 app.get('/getAccessToken', async function (req, res) {
     const params = "?client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET + "&code=" + req.query.code;
