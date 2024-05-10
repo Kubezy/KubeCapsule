@@ -1,9 +1,15 @@
 "use client"
 
 import React, { useEffect, useState } from 'react';
+import Cookies from 'universal-cookie';
 
 export default () => {
+  const cookies = new Cookies()
+
   const CLIENT_ID=process.env.CLIENT_ID
+  const WEB_URL=process.env.WEB_URL
+  const SERVER_URL=process.env.SERVER_URL
+
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [user, setUser] = useState(Object)
 
@@ -16,23 +22,22 @@ export default () => {
     // If codeParam -> we authorized from github
     // If accessToken exists -> we're logged in already.
     // Either case, stay logged in and get user data.
-    if (codeParam || localStorage.getItem("accessToken") !== null) {
+    if (codeParam || cookies.get("accessToken") !== undefined) {
       setIsLoggedIn(true)
       getUserData();
     }
 
     // If we authorized from Github OAuth, and no accessToken,
     // Get the access token from github and set userdata.
-    if (codeParam && (localStorage.getItem("accessToken") === null)) {
+    if (codeParam && (cookies.get("accessToken") === undefined)) {
       const getAccessToken = async () => {
-        await fetch("http://localhost:4000/getAccessToken?code=" + codeParam, {
+        await fetch(`${SERVER_URL}/getAccessToken?code=` + codeParam, {
           method: "GET"
         }).then((response) => {
           return response.json()
         }).then((data) => {
-          console.log(data)
           if (data.access_token) {
-            localStorage.setItem("accessToken", data.access_token)
+            cookies.set("accessToken", data.access_token, { path: '/' })
           }
         })
       }
@@ -44,10 +49,10 @@ export default () => {
 
   // Get the user data from proxy server with the accessToken
   async function getUserData() {
-    await fetch("http://localhost:4000/getUserData", {
+    await fetch(`${SERVER_URL}/getUserData`, {
       method: "GET",
       headers: {
-        "Authorization" : "Bearer " + localStorage.getItem("accessToken")
+        "Authorization" : "Bearer " + cookies.get("accessToken")
       }
     }).then((response) => {
       return response.json()
@@ -87,14 +92,14 @@ export default () => {
         {isLoggedIn ? 
           <>
           <button onClick={() => { 
-            window.location.href = "http://localhost:3000/message";
+            window.location.href = `${WEB_URL}/message`;
             }} className="flex mr-4 bg-kubernetes rounded-sm p-2">
             + Message
           </button> 
-          <button onClick={() => { 
-            localStorage.removeItem("accessToken");
+          <button onClick={() => {
+            cookies.remove("accessToken", { path: '/' })
             setIsLoggedIn(false); 
-            window.location.href = "http://localhost:3000";
+            window.location.href = `${WEB_URL}`;
             }} className="flex bg-kubernetes rounded-sm p-2">
             Logout
           </button> 

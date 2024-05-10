@@ -13,8 +13,8 @@ const Dropdown: React.FC<DropdownProps> = ({ title, options, onChange }) => {
 
     return (
         <div className='mx-auto w-[50%]'>
-            <div className="relative w-[40%] max-w-full mt-12">
-                <p>{title}</p>
+            <div className="relative w-[40%] max-w-full">
+                <p className='ml-1'>{title}</p>
                 <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="absolute top-[40%] bottom-0 w-5 h-5 my-auto text-gray-400 right-3"
@@ -28,7 +28,7 @@ const Dropdown: React.FC<DropdownProps> = ({ title, options, onChange }) => {
                 />
                 </svg>
                 <select onChange={handleChange} 
-                className="w-full px-3 py-2 text-sm text-gray-600 bg-white border rounded-sm shadow-sm outline-none appearance-none focus:ring-offset-2 focus:ring-kubernetes focus:ring-2">
+                className="w-full px-3 py-2 text-sm text-gray-600 bg-white border-black border-2 rounded-sm shadow-sm outline-none appearance-none focus:ring-offset-2 focus:ring-kubernetes focus:ring-2">
                 {options.map((option) => <option>{option}</option>)}
                 </select>
             </div>

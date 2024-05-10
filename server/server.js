@@ -19,11 +19,11 @@ app.use(bodyParser.json())
 const pool = require('./database')
 
 app.get('/addmessage', async function (req, res) {
-    const { email, duration, message, share_public } = req.query;
+    const { email, secondary_email, duration, message, share_public } = req.query;
     
     // Insert data into the PostgreSQL database
-    const query = 'INSERT INTO messages(email, duration, message, share_public) VALUES($1, $2, $3, $4)';
-    const values = [email, duration, message, share_public];
+    const query = 'INSERT INTO messages(email, secondary_email, duration, message, share_public) VALUES($1, $2, $3, $4)';
+    const values = [email, secondary_email, duration, message, share_public];
 
     try {
         await pool.query(query, values);
@@ -31,6 +31,27 @@ app.get('/addmessage', async function (req, res) {
         console.error(err.stack);
     }
 });
+
+app.get('/emailcount/:email', async function (req, res) {
+    const email = req.params.email;
+    // Count count of a specific email
+    const query = 'SELECT COUNT(*) AS count FROM messages WHERE email = $1';
+    const values = [email];
+
+    try {
+        const result = await pool.query(query, values);
+        // Send the count of the specific email back to the client
+        if (result.rows.length > 0) {
+            res.send({email: email, count: parseInt(result.rows[0].count)});
+        } else {
+            res.send({email: email, count: 0});
+        }
+    } catch (err) {
+        console.error(err.stack);
+        res.status(500).send('Error querying the database');
+    }
+});
+
 
 app.get('/getAccessToken', async function (req, res) {
     const params = "?client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET + "&code=" + req.query.code;
@@ -49,7 +70,7 @@ app.get('/getAccessToken', async function (req, res) {
 
 app.get('/getUserData', async function (req, res) {
     const authHeader = req.get("Authorization");
-    console.log(authHeader)
+
     await fetch("https://api.github.com/user", {
         method: "GET",
         headers: {

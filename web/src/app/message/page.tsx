@@ -4,22 +4,27 @@ import { useEffect, useState } from "react";
 import Alert from "../components/pages/message/alert";
 import Button from "../components/pages/message/button";
 import Dropdown from "../components/pages/message/dropdown";
-import FileInput from "../components/pages/message/fileInput";
 import Input from "../components/pages/message/input";
 import TextArea from "../components/pages/message/textarea";
 import Radio from "../components/pages/message/radio";
-import { setRequestMeta } from "next/dist/server/request-meta";
+import Review from "../components/pages/message/review";
+import Cookies from 'universal-cookie';
 
 export default function Messages() {
-    const [user, setUser] = useState(Object)
-    const [render, setRender] = useState(false)
+    const cookies = new Cookies()
+    
+    const MAX_EMAIL = 3
+    const WEB_URL=process.env.WEB_URL
+    const SERVER_URL=process.env.SERVER_URL
+
     const [name, setName] = useState("")
     const [email, setEmail] = useState("")
     const [secondaryEmail, setSecondaryEmail] = useState("")
     const [duration, setDuration] = useState("1 Year")
     const [message, setMessage] = useState("")
-    const [image, setImage] = useState(null)
     const [privacy, setPrivacy] = useState("No")
+
+    const emailRegex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/
 
     const [steps, setStep] = useState({
         stepsItems: ["Email", "Secondary Email", "Capsule", "Review"],
@@ -27,40 +32,46 @@ export default function Messages() {
     })
 
     async function getUserData() {
-        await fetch("http://localhost:4000/getUserData", {
+        await fetch(`${SERVER_URL}/getUserData`, {
           method: "GET",
           headers: {
-            "Authorization" : "Bearer " + localStorage.getItem("accessToken")
+            "Authorization" : "Bearer " + cookies.get("accessToken")
           }
         }).then((response) => {
           return response.json()
         }).then((data: any) => {
-          setUser(data)
           setName(data.name)
           setEmail(data.email)
-          console.log("data: ", data)
         })
     }
 
-    async function sendMessageToDB(message: any) { //id, email, duration, message, share_public
+    async function sendMessageToDB(message: any) { // email, duration, message, share_public
       try {
-          const response = await fetch(`http://localhost:4000/addmessage?email=${message.email}&duration=${message.duration}&message=${message.message}&share_public=${message.share_public}`, {
-              method: "GET",
-              headers: {
-                  'Content-Type': 'application/json',
-              },
-          });
-  
-          if (!response.ok) {
-              throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          
-          const data = await response.json(); // Assuming the server sends back JSON data.
-          console.log(data); // Log or handle the response data as needed.
+        // Send the request to the server along with capsule
+        await fetch(`${SERVER_URL}/addmessage?email=${message.email}&secondary_email=${secondaryEmail}&duration=${message.duration}&message=${message.message}&share_public=${message.share_public}`, {
+          method: "GET",
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        // After that, send the user to home page.
+        window.location.href = `${WEB_URL}`
       } catch (error) {
           console.error('Error sending message:', error);
       }
     }
+
+    const fetchEmailCount = async (email: string) => {
+      let count = 0;
+
+      await fetch(`${SERVER_URL}/emailcount/${email}`)
+          .then(response => response.json())
+          .then(data => count = data.count)
+          .catch(error => console.error('Error fetching email count:', error));
+
+      return count
+    }  
 
     useEffect(() => {
         // Get the code returned from GitHub OAuth
@@ -71,28 +82,26 @@ export default function Messages() {
         // If codeParam -> we authorized from github
         // If accessToken exists -> we're logged in already.
         // Either case, stay logged in and get user data.
-        if (codeParam || localStorage.getItem("accessToken") !== null) {
-            setRender(true);
+        if (codeParam || cookies.get("accessToken") !== undefined) {
             getUserData();
         }
     
         // If we authorized from Github OAuth, and no accessToken,
         // Get the access token from github and set userdata.
-        if (codeParam && (localStorage.getItem("accessToken") === null)) {
+        if (codeParam && (cookies.get("accessToken") === undefined)) {
           const getAccessToken = async () => {
-            await fetch("http://localhost:4000/getAccessToken?code=" + codeParam, {
+            await fetch(`${SERVER_URL}/getAccessToken?code=` + codeParam, {
               method: "GET"
             }).then((response) => {
               return response.json()
             }).then((data) => {
               if (data.access_token) {
-                localStorage.setItem("accessToken", data.access_token)
+                cookies.set("accessToken", data.access_token, { path: '/' })
               }
             })
           }
           getAccessToken().then(() => {
             getUserData()
-            setRender(true);
           });
         }
       }, [])
@@ -100,38 +109,83 @@ export default function Messages() {
     return (
         <>
         <Alert/>
-            <div className="mt-6 max-w-screen-xl mx-auto">
-                <div className={`h-2 border-t-4 border-kubernetes`} style={{ width: `${steps.currentStep * 25}%` }}></div>
-                <div className="w-full">
-                    <ul className="flex w-full text-center">
-                        {steps.stepsItems.map((item) => {
-                            return (
-                                <li className="relative" style={{ left: `${steps.stepsItems.indexOf(item) * 25}%` }}>
-                                    <p className={`${steps.stepsItems.indexOf(item) === steps.currentStep - 1 ? "text-kubernetes font-bold" : "text-slate-600"}`}>{item}</p>
-                                </li>
-                            )
-                        })}
-                    </ul>
-                </div>
-                {steps.currentStep === 1 && <Input placeholder="Email" value={email} onChange={(newEmail) => setEmail(newEmail)}/>}
-                {steps.currentStep === 2 && <Input placeholder="Secondary Email" value={secondaryEmail} onChange={(secondaryEmail) => setSecondaryEmail(secondaryEmail)}/>}
-                {steps.currentStep === 3 && (
-                    <>
-                    <Input placeholder="Full Name" value={name} onChange={(newName) => setName(newName)}/>
-                    <Dropdown title="Duration" options={["1 Year", "5 Years", "10 Years"]} onChange={(newDuration) => setDuration(newDuration)}/>
-                    <TextArea placeholder="Message" onChange={(newMessage) => setMessage(newMessage)}/>
-                    <Radio radios={["No", "Yes"]} onChange={(newPrivacy) => setPrivacy(newPrivacy)} />
-                    </>
-                )}
-                <Button title={`${steps.currentStep === 4 ? "Submit" : "Next"}`} onClick={() => {
-                    if (steps.currentStep !== 4){
-                      setStep({stepsItems: steps.stepsItems, currentStep: steps.currentStep + 1})
-                    }
-                    else {
-                      sendMessageToDB({email: email, duration: 1, message: message, share_public: privacy})
-                    }
-                }}/>
+        <div className="mt-6 max-w-screen-xl mx-auto">
+            <div className={`h-2 border-t-4 border-kubernetes`} style={{ width: `${steps.currentStep * 25}%` }}></div>
+            <div className="w-full">
+                <ul className="flex w-full text-center">
+                    {steps.stepsItems.map((item, idx) => {
+                        return (
+                            <li className="relative" style={{ left: `${steps.stepsItems.indexOf(item) * 25}%` }}>
+                                <p className={`${steps.stepsItems.indexOf(item) === steps.currentStep - 1 ? "text-kubernetes font-bold" : "text-slate-600"}`}>{item}</p>
+                            </li>
+                        )
+                    })}
+                </ul>
             </div>
+            {/* EMAIL */}
+            {steps.currentStep === 1 && <Input title="Email" placeholder="hello@kubezy.com" value={email} onChange={(newEmail) => setEmail(newEmail)}/>}
+            {/* SECONDARY EMAIL */}
+            {steps.currentStep === 2 && <Input title="Secondary Email (Optional)" placeholder="hello@kubezy.com" value={secondaryEmail} onChange={(secondaryEmail) => setSecondaryEmail(secondaryEmail)}/>}
+            {/* CAPSULE */}
+            {steps.currentStep === 3 && (
+                <>
+                <Input title="Full Name" placeholder="John Doe" value={name} onChange={(newName) => setName(newName)}/>
+                <Dropdown title="Duration" options={["1 Year", "5 Years", "10 Years"]} onChange={(newDuration) => setDuration(newDuration)}/>
+                <TextArea title="Message" placeholder="Hello world!" onChange={(newMessage) => setMessage(newMessage)}/>
+                <Radio radios={["No", "Yes"]} onChange={(newPrivacy) => setPrivacy(newPrivacy)} />
+                </>
+            )}
+            {/* REVIEW */}
+            {steps.currentStep === 4 && (
+                <>
+                <Review title="Email" value={email} />
+                {secondaryEmail !== "" && <Review title="Secondary Email" value={secondaryEmail} />}
+                <Review title="Name" value={name} />
+                <Review title="Duration" value={duration} />
+                <Review title="Message" value={message} />
+                <Review title="Public" value={privacy} />
+                </>
+            )}
+            <div className="flex flex-row">
+            {steps.currentStep !== 1 && (
+              <Button title="Back" onClick={() => setStep({stepsItems: steps.stepsItems, currentStep: steps.currentStep - 1})}/>
+            )}
+            <Button title={`${steps.currentStep === 4 ? "Submit" : "Next"}`} onClick={async () => {
+                if (steps.currentStep === 1) { // email
+                  const emailCount = await fetchEmailCount(email)
+                  if (emailCount > MAX_EMAIL) {
+                    alert("The email you entered has already sent maximum amount of messages.")
+                  }
+                  if (emailRegex.test(email)) {
+                    setStep({stepsItems: steps.stepsItems, currentStep: 2})
+                  }
+                  else alert("Please enter a valid email address.")
+                }
+                else if (steps.currentStep === 2) { // secondary email
+                  if (secondaryEmail.trim() === "") {
+                    setStep({stepsItems: steps.stepsItems, currentStep: 3})
+                  }
+                  else if (emailRegex.test(secondaryEmail)) {
+                    setStep({stepsItems: steps.stepsItems, currentStep: 3})
+                  }
+                  else alert("Please enter a valid email address.")
+                }
+                else if (steps.currentStep === 3) { // capsule
+                  if (message.trim() === "") {
+                    alert("Message can't be empty.")
+                  }
+                  else if (name.trim() === "") {
+                    alert("Name can't be empty.")
+                  }
+                  else setStep({stepsItems: steps.stepsItems, currentStep: 4})
+                }
+                else { // review
+                  const _d = Number(duration.substring(0, 2).trim())
+                  sendMessageToDB({email: email, secondary_email: secondaryEmail, duration: _d, message: message, share_public: privacy})
+                }
+            }}/>
+            </div>
+        </div>
         </>
     )
 }
