@@ -6,9 +6,8 @@ import Cookies from 'universal-cookie';
 export default () => {
   const cookies = new Cookies()
 
-  const CLIENT_ID=process.env.CLIENT_ID
-  const WEB_URL=process.env.WEB_URL
-  const SERVER_URL=process.env.SERVER_URL
+  const CLIENT_ID = "Ov23ct6JRI0gTZqedVvK"
+  const SERVER_URL= "https://server.kubecapsule.com" 
 
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [user, setUser] = useState(Object)
@@ -91,15 +90,13 @@ export default () => {
       <div className={`bg-main-kubezy rounded-sm flex items-center justify-center py-1 px-2 ml-4`}>
         {isLoggedIn ? 
           <>
-          <button onClick={() => { 
-            window.location.href = `${WEB_URL}/message`;
-            }} className="flex mr-4 bg-kubernetes rounded-sm p-2">
+          <a href="/message" className="flex mr-4 bg-kubernetes rounded-sm p-2">
             + Message
-          </button> 
+          </a> 
           <button onClick={() => {
             cookies.remove("accessToken", { path: '/' })
             setIsLoggedIn(false); 
-            window.location.href = `${WEB_URL}`;
+            window.location.href = "/";
             }} className="flex bg-kubernetes rounded-sm p-2">
             Logout
           </button> 
