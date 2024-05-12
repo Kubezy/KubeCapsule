@@ -57,12 +57,11 @@ export default function Messages() {
             'Content-Type': 'application/json',
           },
         });
-
-        // After that, send the user to home page.
-        window.location.href = '/'
       } catch (error) {
           console.error('Error sending message:', error);
       }
+
+      window.location.href = "/";
     }
 
     const fetchEmailCount = async (email: string) => {
@@ -181,9 +180,8 @@ export default function Messages() {
                   else if (emailCount > MAX_EMAIL) {
                     alert("The email you entered has already sent maximum amount of messages.")
                   }
-
                   // Check if invalid email
-                  if (emailRegex.test(email)) {
+                  else if (emailRegex.test(email)) {
                     setStep({stepsItems: steps.stepsItems, currentStep: 2})
                   }
                   else alert("Please enter a valid email address.")

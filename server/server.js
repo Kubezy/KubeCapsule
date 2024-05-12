@@ -9,10 +9,7 @@ const CLIENT_SECRET=process.env.CLIENT_SECRET
 
 var app = express()
 
-app.use(cors({
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    origin: '*',
-}));
+app.use(cors());
 
 app.use(bodyParser.json())
 
