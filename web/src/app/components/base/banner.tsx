@@ -7,7 +7,7 @@ export default () => {
   const cookies = new Cookies()
 
   const CLIENT_ID = "Ov23ct6JRI0gTZqedVvK"
-  const SERVER_URL= "https://server.kubecapsule.com" 
+  const SERVER_URL= "http://localhost:4000" // "https://server.kubecapsule.com" 
 
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [user, setUser] = useState(Object)

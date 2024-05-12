@@ -10,7 +10,6 @@ COPY server/package.json ./server/
 RUN cd web && npm install && cd ../server && npm install
 
 # Copy .env files
-COPY web/.env ./web/
 COPY server/.env ./server/
 
 # Build web

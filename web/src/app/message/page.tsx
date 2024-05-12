@@ -15,7 +15,7 @@ export default function Messages() {
     const cookies = new Cookies()
     
     const MAX_EMAIL = 3
-    const SERVER_URL = "https://server.kubecapsule.com"
+    const SERVER_URL = "http://localhost:4000" // "https://server.kubecapsule.com"
 
     const [name, setName] = useState("")
     const [email, setEmail] = useState("")
@@ -51,7 +51,7 @@ export default function Messages() {
     async function sendMessageToDB(message: any) { // email, duration, message, share_public
       try {
         // Send the request to the server along with capsule
-        await fetch(`${SERVER_URL}/addmessage?email=${message.email}&secondary_email=${secondaryEmail}&duration=${message.duration}&message=${message.message}&share_public=${message.share_public}`, {
+        await fetch(`${SERVER_URL}/addmessage?email=${message.email}&secondary_email=${message.secondaryEmail}&duration=${message.duration}&message=${message.message}&share_public=${message.share_public}`, {
           method: "GET",
           headers: {
             'Content-Type': 'application/json',

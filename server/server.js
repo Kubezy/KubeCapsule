@@ -22,8 +22,8 @@ app.get('/addmessage', async function (req, res) {
     const { email, secondary_email, duration, message, share_public } = req.query;
     
     // Insert data into the PostgreSQL database
-    const query = 'INSERT INTO messages(email, secondary_email, duration, message, share_public) VALUES($1, $2, $3, $4)';
-    const values = [email, secondary_email, duration, message, share_public];
+    const query = 'INSERT INTO messages(email, duration, message, share_public, secondary_email) VALUES($1, $2, $3, $4, $5)';
+    const values = [email, duration, message, share_public, secondary_email];
 
     try {
         await pool.query(query, values);
