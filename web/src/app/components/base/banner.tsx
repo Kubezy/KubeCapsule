@@ -40,6 +40,7 @@ export default () => {
           }
         })
       }
+      
       getAccessToken().then(() => {
         getUserData();
       });

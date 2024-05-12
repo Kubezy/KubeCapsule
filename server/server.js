@@ -2,6 +2,7 @@ var express = require('express')
 var cors = require('cors')
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args))
 var bodyParser = require('body-parser')
+require('dotenv').config()
 
 const CLIENT_ID=process.env.CLIENT_ID
 const CLIENT_SECRET=process.env.CLIENT_SECRET
@@ -64,6 +65,8 @@ app.get('/getAccessToken', async function (req, res) {
         return response.json()
     }).then((data) => {
         res.json(data)
+    }).catch(error => {
+        res.status(400).json({ error: error.toString() });
     })
 });
 
