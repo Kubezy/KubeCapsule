@@ -7,7 +7,7 @@ const LoginWithGitHub = () => {
   const cookies = new Cookies();
 
   const CLIENT_ID = "Ov23lix3Vj8c4sxqCz1o";
-  const SERVER_URL = "https://kubecapsule.com/api";
+  const SERVER_URL = "https://server.kubecapsule.com";
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(Object);

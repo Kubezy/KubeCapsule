@@ -15,7 +15,7 @@ export default function Messages() {
     const cookies = new Cookies()
     
     const MAX_EMAIL = 3
-    const SERVER_URL = "https://kubecapsule.com/api"
+    const SERVER_URL = "https://server.kubecapsule.com"
 
     const [name, setName] = useState("")
     const [email, setEmail] = useState("")
