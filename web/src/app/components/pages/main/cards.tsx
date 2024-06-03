@@ -1,3 +1,5 @@
+import React from 'react';
+import LoginWithGitHub from '../../base/LoginWithGitHubforMain';
 export default () => {
     return (
         <><section>
@@ -39,15 +41,8 @@ export default () => {
             </div>
         </section>
             <section>
-                <div className="px-12 text-black-capsule gap-x-12 gap-y-16 lg:px-0 md:py-8 lg:gap-y-20 text-balance">
-                    <div className="max-w-xl mx-auto flex main-card-footer text-center justify-center text-white font-semibold text-sm">
-                        <a className="pt-3 pb-3">
-                            Add to KubeCapsule
-                        </a>
-                        <div className="pt-3 pl-1">
-                            <svg width="19px" height="19px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20.319 12.004c0-.272-.114-.536-.317-.73L14.228 5.5c-.229-.22-.466-.316-.712-.316-.562 0-.967.396-.967.932 0 .281.115.518.29.694l1.978 2.004 2.549 2.33-2.04-.124H4.675c-.589 0-.993.404-.993.984 0 .572.404.976.993.976h10.653l2.039-.123-2.55 2.329-1.977 2.004a.968.968 0 0 0-.29.694c0 .536.405.932.967.932a.99.99 0 0 0 .694-.299l5.792-5.792c.203-.193.317-.457.317-.72Z" fill="currentColor"></path></svg>
-                        </div>
-                    </div>
+                <div className="px-12 max-w-xl mx-auto  text-black-capsule gap-x-12 gap-y-16 lg:px-0 md:py-8 lg:gap-y-20 text-white font-semibold text-sm justify-center text-balance">
+                <LoginWithGitHub />
                 </div>
             </section>
         </>
