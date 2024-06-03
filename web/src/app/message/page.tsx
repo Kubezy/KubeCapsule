@@ -10,10 +10,12 @@ import Radio from "../components/pages/message/radio";
 import Review from "../components/pages/message/review";
 import Cookies from 'universal-cookie';
 import Spinner from "../components/pages/message/spinner";
+import { useRouter } from "next/navigation";
 
 export default function Messages() {
     const cookies = new Cookies()
-    
+    const router = useRouter()
+
     const MAX_EMAIL = 3
     const SERVER_URL = "https://server.kubecapsule.com"
 
@@ -54,11 +56,10 @@ export default function Messages() {
             'Content-Type': 'application/json',
           },
         });
+        return null
       } catch (error) {
           console.error('Error sending message:', error);
       }
-
-      window.location.href = "/";
     }
 
     const fetchEmailCount = async (email: string) => {
@@ -179,6 +180,7 @@ export default function Messages() {
                 else {
                   const _d = Number(duration.substring(0, 2).trim())
                   sendMessageToDB({email: email, secondary_email: secondaryEmail, duration: _d, message: message, share_public: privacy})
+                  .then(() => { router.push("/") })
                 }
             }}/>
             </div>

@@ -9,7 +9,12 @@ const CLIENT_SECRET=process.env.CLIENT_SECRET
 
 var app = express()
 
-app.use(cors());
+var corsOptions = {
+    origin: 'https://kubecapsule.com',
+    optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
 
 app.use(bodyParser.json())
 
