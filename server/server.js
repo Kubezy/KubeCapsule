@@ -9,9 +9,16 @@ const CLIENT_SECRET=process.env.CLIENT_SECRET
 
 var app = express()
 
-var corsOptions = {
-    origin: 'https://kubecapsule.com',
-    optionsSuccessStatus: 200
+const allowedOrigins = ['https://kubecapsule.com', 'https://kubecapsule.com/message', 'https://www.kubecapsule.com', 'https://www.kubecapsule.com/message'];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
 };
 
 app.use(cors(corsOptions));
@@ -29,8 +36,10 @@ app.get('/addmessage', async function (req, res) {
 
     try {
         await pool.query(query, values);
+        res.status(200).json({ success: true, message: 'Message added successfully' });
     } catch (err) {
         console.error(err.stack);
+        res.status(500).json({ success: false, message: 'An error occurred' });
     }
 });
 

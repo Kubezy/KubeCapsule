@@ -50,13 +50,14 @@ export default function Messages() {
 
     async function sendMessageToDB(message: any) {
       try {
-        await fetch(`${SERVER_URL}/addmessage?email=${message.email}&secondary_email=${message.secondaryEmail}&duration=${message.duration}&message=${message.message}&share_public=${message.share_public}`, {
+        fetch(`${SERVER_URL}/addmessage?email=${message.email}&secondary_email=${message.secondaryEmail}&duration=${message.duration}&message=${message.message}&share_public=${message.share_public}`, {
           method: "GET",
           headers: {
             'Content-Type': 'application/json',
           },
-        });
-        return null
+        }).then(() => {
+          router.push("/")
+        })
       } catch (error) {
           console.error('Error sending message:', error);
       }
@@ -180,7 +181,6 @@ export default function Messages() {
                 else {
                   const _d = Number(duration.substring(0, 2).trim())
                   sendMessageToDB({email: email, secondary_email: secondaryEmail, duration: _d, message: message, share_public: privacy})
-                  .then(() => { router.push("/") })
                 }
             }}/>
             </div>
