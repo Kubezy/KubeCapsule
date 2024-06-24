@@ -4,12 +4,14 @@ const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch
 var bodyParser = require('body-parser')
 require('dotenv').config()
 
+const { verificationCode, sendEmailVerification, sendSummary } = require('./utils.js')
+
 const CLIENT_ID=process.env.CLIENT_ID
 const CLIENT_SECRET=process.env.CLIENT_SECRET
 
 var app = express()
 
-const allowedOrigins = ['https://kubecapsule.com', 'https://kubecapsule.com/message', 'https://www.kubecapsule.com', 'https://www.kubecapsule.com/message'];
+const allowedOrigins = ['https://kubecapsule.com', 'https://kubecapsule.com/message', 'https://www.kubecapsule.com', 'https://www.kubecapsule.com/message', 'http://localhost:3000', 'http://localhost:3000/message'];
 
 const corsOptions = {
   origin: function (origin, callback) {
@@ -27,15 +29,25 @@ app.use(bodyParser.json())
 
 const pool = require('./database')
 
+app.get('/emailconfirm/:email', async function (req, res) {
+    const email = req.params.email;
+    const code = verificationCode();
+    sendEmailVerification(email, code);
+    res.send({ code: code });
+})
+
 app.get('/addmessage', async function (req, res) {
-    const { email, secondary_email, duration, message, share_public } = req.query;
+    const { fullName, email, secondary_email, duration, message, share_public } = req.query;
     
-    // Insert data into the PostgreSQL database
     const query = 'INSERT INTO messages(email, duration, message, share_public, secondary_email) VALUES($1, $2, $3, $4, $5)';
     const values = [email, duration, message, share_public, secondary_email];
 
     try {
         await pool.query(query, values);
+        sendSummary(email, { fullName, email, secondary_email, duration, message, share_public })
+        if (secondary_email) {
+           sendSummary(secondary_email, { fullName, email, secondary_email, duration, message, share_public })
+        }
         res.status(200).json({ success: true, message: 'Message added successfully' });
     } catch (err) {
         console.error(err.stack);
@@ -45,13 +57,11 @@ app.get('/addmessage', async function (req, res) {
 
 app.get('/emailcount/:email', async function (req, res) {
     const email = req.params.email;
-    // Count count of a specific email
     const query = 'SELECT COUNT(*) AS count FROM messages WHERE email = $1';
     const values = [email];
 
     try {
         const result = await pool.query(query, values);
-        // Send the count of the specific email back to the client
         if (result.rows.length > 0) {
             res.send({email: email, count: parseInt(result.rows[0].count)});
         } else {
